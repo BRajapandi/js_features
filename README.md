@@ -21,3 +21,35 @@ const notification = new Notification("Hi there!");
 // At last, if the user has denied notifications, and you
 // want to be respectful there is no need to bother them anymore.
 }
+
+---
+
+function notifyMe() {
+if (!window.Notification) {
+console.log('Browser does not support notifications.');
+} else {
+// check if permission is already granted
+if (Notification.permission === 'granted') {
+// show notification here
+var notify = new Notification('Hi there!', {
+body: 'How are you doing?',
+icon: 'https://bit.ly/2DYqRrh',
+});
+} else {
+// request permission from user
+Notification.requestPermission().then(function (p) {
+if (p === 'granted') {
+// show notification here
+var notify = new Notification('Hi there!', {
+body: 'How are you doing?',
+icon: 'https://bit.ly/2DYqRrh',
+});
+} else {
+console.log('User blocked notifications.');
+}
+}).catch(function (err) {
+console.error(err);
+});
+}
+}
+}

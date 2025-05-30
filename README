@@ -34,11 +34,15 @@ but you can override that behavior by setting values of ltr and rtl (although mo
 badge:
 A string containing the URL of the image used to represent the notification when there isn't enough space to display the notification itself.
 
+the Android Notification Bar. On Android devices, the badge should accommodate devices up to 4x resolution, about 96 by 96 px, and the image will be automatically masked.
+
 Body:
 A string representing the body text of the notification, which is displayed below the title.
 
 tag:
 A string representing an identifying tag for the notification. The default is the empty string.
+
+The idea of notification tags is that more than one notification can share the same tag, linking them together. One notification can then be programmatically replaced with another to avoid the users' screen being filled up with a huge number of similar notifications.
 
 icon:
 A string containing the URL of an icon to be displayed in the notification.
@@ -48,12 +52,17 @@ a string containing the URL of an image to be displayed in the notification.
 
 data:
 Arbitrary data that you want associated with the notification. This can be of any data type.
+you can pass any data to this body. and you can access those data after user interaction also
+
+dir:
+The dir read-only property of the Notification interface indicates the text direction of the notification, as specified in the dir option of the Notification() constructor.
+values -> auto , ltr, rtl
 
 vibrate:
 A vibration pattern for the device's vibration hardware to emit with the notification. If specified, silent must not be true.
 navigator.vibrate([200, 100, 200]);
 
-renotify:
+renotify: dout
 A boolean value specifying whether the user should be notified after a new notification replaces an old one. The default is false, which means they won't be notified. If true, then tag also must be set.
 
 requireInteraction:
@@ -70,3 +79,31 @@ action: A string identifying a user action to be displayed on the notification.
 title: A string containing action text to be shown to the user.
 icon: A string containing the URL of an icon to display with the action.
 Appropriate responses are built using event.action within the notificationclick event.
+
+maxActions: dout
+
+The maxActions attribute of the Notification interface returns the maximum number of actions supported by the device and the User Agent. Effectively, this is the maximum number of elements in Notification.actions array which will be respected by the User Agent.
+
+close():
+The close() method of the Notification interface is used to close/remove a previously displayed notification.
+
+This API shouldn't be used just to have the notification removed from the screen after a fixed delay since this method will also remove the notification from any notification tray, preventing users from interacting with it after it was initially shown. A valid use for this API would be to remove a notification that is no longer relevant (e.g. the user already read the notification on the webpage in the case of a messaging app or the following song is already playing in a music app).
+
+document.addEventListener("visibilitychange", () => {
+if (document.visibilityState === "visible") {
+// The tab has become visible so clear the now-stale Notification.
+n.close();
+}
+});
+
+Event : click,show, closed, error
+
+Click:
+The click event of the Notification interface fires when the user clicks on displayed Notification.
+The default behavior is to move the focus to the viewport of the notification's related browsing context.
+If you don't want that behavior, call preventDefault() on the event object.
+
+notification.onclick = (event) => {
+event.preventDefault(); // prevent the browser from focusing the Notification's tab
+window.open("http://www.mozilla.org", "\_blank");
+};
